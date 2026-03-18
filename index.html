@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>桉的塔罗 · 随机顺序 | 正逆位</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ===== 全局样式 ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0B1026;
+            color: #E0E0E0;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+                        radial-gradient(2px 2px at 40px 70px, #f8f0d5, rgba(0,0,0,0)),
+                        radial-gradient(1px 1px at 90px 40px, #fff8e7, rgba(0,0,0,0)),
+                        radial-gradient(2px 2px at 160px 120px, #fffaec, rgba(0,0,0,0)),
+                        radial-gradient(1px 1px at 230px 180px, #fff5d6, rgba(0,0,0,0)),
+                        radial-gradient(3px 3px at 320px 250px, #fff9e6, rgba(0,0,0,0));
+            background-size: 200px 200px;
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 0;
+            animation: twinkle 4s infinite alternate;
+        }
+        @keyframes twinkle { 0% { opacity: 0.2; } 100% { opacity: 0.5; } }
+        .container { 
+            position: relative; z-index: 2; 
+            max-width: 1400px; margin: 0 auto; 
+            padding: 0 clamp(10px, 3vw, 15px);
+        }
+
+        /* 导航栏 */
+        .navbar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 0; border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+            margin-bottom: 25px; flex-wrap: wrap; gap: 10px;
+        }
+        .logo {
+            font-family: 'Cormorant Garamond', serif; font-size: clamp(1.5rem, 4vw, 1.8rem); 
+            font-weight: 600;
+            color: #D4AF37; letter-spacing: 2px; text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+            cursor: pointer;
+        }
+        .logo i { margin-right: 8px; font-size: clamp(1.5rem, 4vw, 1.8rem); color: #E0E0E0; }
+        
+        .hamburger {
+            display: none;
+            font-size: clamp(1.5rem, 4vw, 1.8rem);
+            color: #D4AF37;
+            cursor: pointer;
+            z-index: 100;
+        }
+        
+        .nav-links { 
+            display: flex; gap: clamp(10px, 3vw, 15px); flex-wrap: wrap;
+            position: fixed;
+            top: 0; right: 0;
+            width: 80%; max-width: 280px;
+            height: 100vh;
+            background: rgba(11, 16, 38, 0.98);
+            flex-direction: column;
+            padding: 80px 20px 20px;
+            border-left: 1px solid #D4AF37;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 99;
+        }
+        .nav-links.active {
+            transform: translateX(0);
+        }
+        .nav-links a {
+            color: #E0E0E0; text-decoration: none; font-weight: 400; 
+            font-size: clamp(1rem, 3vw, 1.1rem);
+            transition: color 0.3s ease; cursor: pointer;
+            border-bottom: 1px solid transparent; padding-bottom: 5px;
+            padding: 10px 0;
+        }
+        .nav-links a:hover, .nav-links a.active { 
+            color: #D4AF37; border-bottom-color: #D4AF37; 
+        }
+
+        .page { display: none; animation: fadeIn 0.3s; }
+        .page.active-page { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* 英雄区 */
+        .hero {
+            text-align: center; padding: clamp(20px, 5vw, 30px) clamp(10px, 3vw, 15px) clamp(30px, 6vw, 50px);
+            background: radial-gradient(ellipse at center, rgba(42,30,60,0.6) 0%, rgba(11,16,38,0.9) 80%);
+            border-radius: clamp(20px, 5vw, 30px); margin-bottom: clamp(20px, 4vw, 35px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+        }
+        .card-3d {
+            width: clamp(100px, 25vw, 140px); 
+            height: clamp(140px, 35vw, 200px); 
+            margin: 0 auto 20px; position: relative;
+            transform-style: preserve-3d; transition: transform 0.8s; cursor: pointer;
+        }
+        .card-3d:hover { transform: rotateY(180deg); }
+        .card-front, .card-back {
+            position: absolute; width: 100%; height: 100%; border-radius: clamp(12px, 3vw, 18px);
+            backface-visibility: hidden; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8); border: 2px solid rgba(212, 175, 55, 0.6);
+        }
+        .card-front { background: linear-gradient(145deg, #2A1E3C, #1A1128); transform: rotateY(0deg); font-size: clamp(1.5rem, 4vw, 2rem); color: #D4AF37; }
+        .card-front i { font-size: clamp(2.5rem, 6vw, 3.5rem); filter: drop-shadow(0 0 15px #D4AF37); }
+        .card-back {
+            background: #D4AF37; color: #0B1026; transform: rotateY(180deg);
+            font-family: 'Cormorant Garamond', serif; font-size: clamp(1rem, 3vw, 1.3rem); font-weight: 700;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="%230B1026" opacity="0.2"><path d="M50 15 L61 40 L88 44 L67 60 L73 88 L50 73 L27 88 L33 60 L12 44 L39 40 Z"/></svg>');
+            background-size: 50px 50px; background-position: center; background-repeat: no-repeat;
+        }
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight: 600;
+            color: #D4AF37; margin-bottom: 8px; text-shadow: 0 0 20px rgba(212,175,55,0.5);
+            letter-spacing: 2px;
+        }
+        .hero p {
+            font-size: clamp(0.9rem, 2vw, 1rem); max-width: 500px; margin: 0 auto; color: #E0E0E0; font-weight: 300;
+            border-top: 1px solid rgba(212,175,55,0.3); border-bottom: 1px solid rgba(212,175,55,0.3);
+            padding: 12px 0;
+        }
+        .btn-gold {
+            display: inline-block; margin-top: 25px; padding: clamp(8px, 2vw, 10px) clamp(20px, 5vw, 30px);
+            background: transparent; border: 2px solid #D4AF37; color: #D4AF37;
+            font-size: clamp(1rem, 2.5vw, 1.1rem); font-weight: 600; text-decoration: none; border-radius: 50px;
+            transition: all 0.4s ease; letter-spacing: 1px; backdrop-filter: blur(5px);
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+        .btn-gold:hover, .btn-gold:active { 
+            background: #D4AF37; color: #0B1026; box-shadow: 0 0 30px #D4AF37; 
+            transform: scale(0.98);
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif; font-size: clamp(1.5rem, 4vw, 2rem); color: #D4AF37;
+            text-align: center; margin-bottom: 12px; position: relative; padding-bottom: 8px;
+        }
+        .section-title::after {
+            content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 70px; height: 2px; background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+        }
+        .subtitle { 
+            text-align: center; color: #aaa; margin-bottom: clamp(20px, 4vw, 30px); 
+            font-size: clamp(0.85rem, 2vw, 0.95rem); font-style: italic; 
+        }
+        
+        /* 牌阵网格 */
+        .spread-grid {
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(clamp(200px, 45vw, 240px), 1fr)); 
+            gap: clamp(12px, 3vw, 18px); margin: clamp(25px, 5vw, 35px) 0;
+        }
+        .spread-card {
+            background: rgba(42, 30, 60, 0.7); backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.2); border-radius: clamp(12px, 3vw, 18px); 
+            padding: clamp(15px, 3vw, 20px) clamp(10px, 2vw, 12px) clamp(15px, 3vw, 18px);
+            transition: all 0.3s ease; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            display: flex; flex-direction: column; position: relative; overflow: hidden; cursor: pointer;
+            touch-action: manipulation;
+        }
+        .spread-card:hover, .spread-card:active { 
+            border-color: #D4AF37; box-shadow: 0 0 30px rgba(212, 175, 55, 0.4); 
+            transform: translateY(-4px) scale(0.98);
+        }
+        .spread-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, #D4AF37, #f9e7b3, #D4AF37); transform: scaleX(0); transition: transform 0.3s ease;
+        }
+        .spread-card:hover::before { transform: scaleX(1); }
+        .spread-icon { font-size: clamp(1.5rem, 4vw, 2rem); color: #D4AF37; margin-bottom: 12px; text-align: center; filter: drop-shadow(0 0 8px #D4AF37); }
+        .spread-card h3 { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.2rem, 3vw, 1.4rem); color: #D4AF37; margin-bottom: 8px; text-align: center; }
+        .spread-card p { color: #d0d0d0; font-size: clamp(0.8rem, 2vw, 0.85rem); line-height: 1.4; text-align: center; margin-bottom: 12px; flex-grow: 1; }
+        .spread-tag { color: #D4AF37; font-size: clamp(0.7rem, 1.8vw, 0.75rem); font-weight: 500; text-align: center; border-top: 1px dashed rgba(212,175,55,0.3); padding-top: 8px; margin-top: auto; }
+
+        .meaning-list { margin-top: 25px; }
+        .meaning-item {
+            background: rgba(42, 30, 60, 0.5); border-radius: clamp(12px, 3vw, 18px); 
+            padding: clamp(15px, 3vw, 20px); margin-bottom: clamp(15px, 3vw, 20px);
+            border-left: 5px solid #D4AF37; backdrop-filter: blur(5px);
+        }
+        .meaning-item h3 { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.4rem, 3vw, 1.6rem); color: #D4AF37; margin-bottom: 8px; }
+        .meaning-item h4 { color: #D4AF37; margin: 8px 0 4px; font-size: clamp(0.9rem, 2vw, 1rem); }
+        .meaning-item p { color: #ccc; margin-bottom: 6px; font-size: clamp(0.85rem, 2vw, 0.9rem); }
+
+        .knowledge-grid {
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(clamp(200px, 45vw, 240px), 1fr)); 
+            gap: clamp(12px, 3vw, 18px); margin: 25px 0;
+        }
+        .knowledge-card {
+            background: rgba(42, 30, 60, 0.7); border-radius: clamp(12px, 3vw, 18px); 
+            padding: clamp(15px, 3vw, 18px); border: 1px solid rgba(212,175,55,0.2);
+            cursor: pointer; transition: all 0.3s ease;
+        }
+        .knowledge-card:hover {
+            border-color: #D4AF37; box-shadow: 0 0 20px rgba(212,175,55,0.3);
+            transform: translateY(-2px);
+        }
+        .knowledge-card h3 { color: #D4AF37; font-family: 'Cormorant Garamond', serif; font-size: clamp(1.2rem, 3vw, 1.4rem); margin-bottom: 12px; border-bottom: 1px dashed; padding-bottom: 6px; }
+        .knowledge-card ul, .knowledge-card p { color: #ccc; margin-left: 15px; font-size: clamp(0.85rem, 2vw, 0.9rem); }
+        .knowledge-card li { margin-bottom: 4px; }
+        .knowledge-card strong { color: #D4AF37; }
+
+        .about-box, .contact-box {
+            background: rgba(42, 30, 60, 0.7); border-radius: clamp(20px, 5vw, 30px); 
+            padding: clamp(25px, 5vw, 35px) clamp(10px, 3vw, 15px); text-align: center;
+            border: 1px solid #D4AF37; margin: clamp(25px, 5vw, 35px) 0; backdrop-filter: blur(10px);
+        }
+        .about-box h2, .contact-box h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 5vw, 2.5rem); color: #D4AF37; margin-bottom: 15px; }
+        .about-box p, .contact-box p { font-size: clamp(1rem, 2.5vw, 1.2rem); color: #f0f0f0; max-width: 400px; margin: 0 auto 12px; line-height: 1.5; }
+        .about-box i, .contact-box i { color: #D4AF37; font-size: clamp(1.8rem, 4vw, 2.2rem); margin: 15px 0; }
+        
+        /* 联系我们页面样式 */
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .contact-item {
+            background: rgba(26, 17, 40, 0.8);
+            border-radius: 15px;
+            padding: 15px 20px;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .contact-item i {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            color: #D4AF37;
+            filter: drop-shadow(0 0 8px #D4AF37);
+        }
+        .contact-item .contact-text {
+            text-align: left;
+        }
+        .contact-item .contact-text h3 {
+            color: #D4AF37;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.2rem, 3vw, 1.4rem);
+            margin-bottom: 5px;
+        }
+        .contact-item .contact-text p {
+            color: #e0e0e0;
+            font-size: clamp(1rem, 2.5vw, 1.1rem);
+            margin: 0;
+        }
+
+        .footer {
+            border-top: 1px solid rgba(212,175,55,0.2); padding: 25px 0; margin-top: 35px;
+            text-align: center; color: #888; font-size: clamp(0.75rem, 2vw, 0.8rem);
+        }
+        .footer .gold { color: #D4AF37; }
+
+        /* 模态框样式 */
+        .modal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0;
+            width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+            align-items: center; justify-content: center;
+            overflow-y: auto;
+            padding: clamp(10px, 3vw, 20px);
+        }
+        .modal-content {
+            background: rgba(26, 17, 40, 0.95); border: 2px solid #D4AF37; 
+            border-radius: clamp(15px, 4vw, 25px);
+            padding: clamp(20px, 4vw, 25px) clamp(10px, 3vw, 15px); 
+            width: 100%; max-width: 1100px; 
+            max-height: 90vh; overflow-y: auto;
+            box-shadow: 0 0 70px rgba(212,175,55,0.3); position: relative; animation: fadeIn 0.3s;
+        }
+        .close {
+            position: sticky; top: 12px; float: right;
+            color: #D4AF37; font-size: clamp(1.8rem, 5vw, 2.2rem);
+            cursor: pointer; transition: 0.3s; line-height: 1; z-index: 10;
+        }
+        .close:hover, .close:active { color: #fff; transform: rotate(90deg) scale(0.95); }
+        #modalSpreadTitle { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.5rem, 4vw, 1.8rem); color: #D4AF37; text-align: center; margin-bottom: 12px; }
+
+        .mode-tabs {
+            display: flex; justify-content: center; gap: clamp(6px, 2vw, 8px); margin-bottom: 20px; flex-wrap: wrap;
+        }
+        .mode-btn {
+            background: transparent; border: 2px solid #D4AF37; color: #D4AF37;
+            font-size: clamp(0.85rem, 2vw, 0.95rem); padding: clamp(5px, 1.5vw, 6px) clamp(12px, 3vw, 16px); 
+            border-radius: 40px;
+            cursor: pointer; transition: 0.3s; font-weight: 600; touch-action: manipulation;
+        }
+        .mode-btn.active, .mode-btn:hover, .mode-btn:active { 
+            background: #D4AF37; color: #0B1026;
+            transform: scale(0.98);
+        }
+
+        /* 随机模式卡片 */
+        .cards-container {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(15px, 3vw, 20px); margin: 20px 0;
+            transition: all 0.5s ease;
+        }
+        /* 选牌完成后隐藏容器通用样式 */
+        /* 塔罗知识模态框 */
+        #knowledgeModal .modal-content {
+            max-width: 900px;
+        }
+        #knowledgeTitle {
+            font-family: 'Cormorant Garamond', serif; font-size: clamp(1.5rem, 4vw, 2rem); color: #D4AF37; text-align: center; margin-bottom: 20px;
+            border-bottom: 1px solid rgba(212,175,55,0.3); padding-bottom: 10px;
+        }
+        #knowledgeContent {
+            color: #e0e0e0; line-height: 1.7;
+        }
+        #knowledgeContent h3 {
+            color: #D4AF37; font-family: 'Cormorant Garamond', serif; font-size: clamp(1.2rem, 3vw, 1.5rem); margin: 15px 0 8px;
+        }
+        #knowledgeContent h4 {
+            color: #D4AF37; margin: 10px 0 5px; font-size: clamp(1rem, 2.5vw, 1.1rem);
+        }
+        #knowledgeContent p {
+            margin-bottom: 10px; font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+        #knowledgeContent ul {
+            margin-left: 20px; margin-bottom: 10px;
+        }
+        #knowledgeContent li {
+            margin-bottom: 5px;
+        }
+        #knowledgeContent strong {
+            color: #D4AF37;
+        }
+        .cards-container.locked,
+        .horizontal-scroll.locked,
+        .wheel-selected-area.locked {
+            opacity: 0.2;
+            pointer-events: none;
+            max-height: 0;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+        .draw-card {
+            width: clamp(90px, 20vw, 140px); 
+            height: clamp(130px, 30vw, 200px); 
+            border-radius: clamp(12px, 3vw, 18px); background: #D4AF37;
+            border: 3px solid #b38f2c; box-shadow: 0 15px 30px rgba(0,0,0,0.8);
+            display: flex; align-items: center; justify-content: center; font-size: clamp(1.5rem, 4vw, 2rem);
+            color: #0B1026; cursor: pointer; transition: all 0.3s ease; position: relative;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="%230B1026" opacity="0.2"><path d="M50 15 L61 40 L88 44 L67 60 L73 88 L50 73 L27 88 L33 60 L12 44 L39 40 Z"/></svg>');
+            background-size: 50px 50px; background-position: center; background-repeat: no-repeat;
+            touch-action: manipulation;
+        }
+        .draw-card:active { transform: scale(0.98); }
+        .draw-card.revealed {
+            background: linear-gradient(145deg, #2A1E3C, #1A1128); background-image: none;
+            border-color: #D4AF37; color: #D4AF37; font-size: clamp(0.8rem, 2vw, 0.95rem); font-weight: 600;
+            text-align: center; padding: 10px; cursor: default; font-family: 'Cormorant Garamond', serif;
+            box-shadow: 0 0 30px #D4AF37;
+        }
+
+        /* 手动模式网格 */
+        .manual-grid {
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(clamp(60px, 15vw, 75px), 1fr)); 
+            gap: clamp(6px, 1.5vw, 8px);
+            max-height: 400px; overflow-y: auto; padding: clamp(10px, 2vw, 12px); 
+            background: rgba(0,0,0,0.3); border-radius: clamp(15px, 3vw, 20px);
+            margin-bottom: 15px;
+            transition: all 0.5s ease;
+        }
+        /* 选牌完成后隐藏牌阵网格 */
+        .manual-grid.locked {
+            opacity: 0.2;
+            pointer-events: none;
+            max-height: 0;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+        .manual-card {
+            width: 100%; aspect-ratio: 2/3; cursor: pointer; position: relative;
+            transform-style: preserve-3d; transition: transform 0.4s; border-radius: clamp(6px, 1.5vw, 8px);
+            touch-action: manipulation;
+        }
+        .manual-card:active { transform: scale(0.97); }
+        .manual-card.flipped { transform: rotateY(180deg); }
+        .manual-card.disabled {
+            pointer-events: none;
+            opacity: 0.5;
+        }
+        .manual-card .card-front, .manual-card .card-back {
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+            border-radius: clamp(8px, 2vw, 10px); display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border: 2px solid #D4AF37; box-shadow: 0 5px 15px rgba(0,0,0,0.6); font-size: clamp(0.6rem, 1.5vw, 0.7rem);
+        }
+        .manual-card .card-front {
+            background: #D4AF37; color: #0B1026; transform: rotateY(0deg);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="%230B1026" opacity="0.2"><path d="M50 15 L61 40 L88 44 L67 60 L73 88 L50 73 L27 88 L33 60 L12 44 L39 40 Z"/></svg>');
+            background-size: 30px 30px; background-position: center; background-repeat: no-repeat;
+        }
+        .manual-card .card-back {
+            background: linear-gradient(145deg, #2A1E3C, #1A1128); color: #D4AF37; transform: rotateY(180deg);
+            text-align: center; padding: 4px; word-break: break-word;
+        }
+        .manual-card .card-back i { font-size: clamp(1rem, 3vw, 1.3rem); margin-bottom: 3px; display: block; }
+        .manual-card .card-back .orientation { font-size: clamp(0.5rem, 1.2vw, 0.55rem); color: #D4AF37; margin-top: 2px; }
+
+        /* 选中牌放大显示容器（通用） */
+        .selected-cards {
+            display: flex; justify-content: center; gap: clamp(20px, 5vw, 30px); margin-top: 20px; flex-wrap: wrap;
+        }
+        /* 放大的选中牌样式（通用） */
+        .selected-card {
+            width: clamp(120px, 30vw, 180px); 
+            height: clamp(180px, 45vw, 270px); 
+            background: linear-gradient(145deg, #2A1E3C, #1A1128); 
+            border: 3px solid #D4AF37;
+            border-radius: clamp(15px, 4vw, 20px); 
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; 
+            font-size: clamp(1rem, 3vw, 1.4rem); 
+            color: #D4AF37; 
+            text-align: center; 
+            padding: 15px;
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.4);
+            backdrop-filter: blur(10px);
+            animation: scaleIn 0.5s ease forwards;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        /* 逐个放大动画 */
+        .selected-card:nth-child(1) { animation-delay: 0.1s; }
+        .selected-card:nth-child(2) { animation-delay: 0.2s; }
+        .selected-card:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes scaleIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        .selected-card i { 
+            font-size: clamp(2rem, 6vw, 3rem); 
+            margin-bottom: 15px; 
+            filter: drop-shadow(0 0 10px #D4AF37);
+        }
+        .selected-card .orientation {
+            font-size: clamp(0.9rem, 2vw, 1.1rem); 
+            margin-top: 10px; 
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* 水平拖拽模式 */
+        .horizontal-scroll {
+            width: 100%; overflow-x: auto; overflow-y: hidden; white-space: nowrap;
+            -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: #D4AF37 #2A1E3C;
+            padding: clamp(10px, 3vw, 15px) 0; margin-bottom: 20px; border-radius: 20px;
+            cursor: grab; touch-action: pan-x;
+            transition: all 0.5s ease;
+        }
+        .horizontal-scroll::-webkit-scrollbar { height: 8px; }
+        .horizontal-scroll::-webkit-scrollbar-thumb { background: #D4AF37; border-radius: 10px; }
+        .horizontal-scroll::-webkit-scrollbar-track { background: #2A1E3C; border-radius: 10px; }
+        .scroll-track {
+            display: inline-flex; gap: clamp(10px, 2vw, 15px); padding: 0 15px;
+        }
+        .wheel-card-h {
+            width: clamp(80px, 20vw, 110px); 
+            height: clamp(115px, 30vw, 160px); 
+            background: #D4AF37; border: 3px solid #b38f2c;
+            border-radius: clamp(12px, 3vw, 15px); display: inline-flex; flex-direction: column; align-items: center;
+            justify-content: center; color: #0B1026; cursor: pointer; transition: all 0.2s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.7); flex-shrink: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="%230B1026" opacity="0.2"><path d="M50 15 L61 40 L88 44 L67 60 L73 88 L50 73 L27 88 L33 60 L12 44 L39 40 Z"/></svg>');
+            background-size: 60px 60px; background-position: center; background-repeat: no-repeat;
+            touch-action: manipulation;
+        }
+        .wheel-card-h:active { transform: scale(0.97); }
+        .wheel-card-h.selected {
+            border-color: #fff; box-shadow: 0 0 25px #D4AF37; transform: scale(1.02);
+            background: #e5c158;
+        }
+        .wheel-selected-area {
+            display: flex; justify-content: center; gap: clamp(10px, 3vw, 15px); margin-top: 20px; flex-wrap: wrap;
+            transition: all 0.5s ease;
+        }
+        .wheel-slot {
+            width: clamp(80px, 20vw, 110px); 
+            height: clamp(115px, 30vw, 160px); 
+            background: #1A1128; border: 2px dashed #D4AF37;
+            border-radius: clamp(12px, 3vw, 15px); display: flex; flex-direction: column; align-items: center;
+            justify-content: center; color: #D4AF37; font-size: clamp(0.7rem, 1.8vw, 0.8rem); opacity: 0.7;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        .wheel-slot.filled { border-style: solid; opacity: 1; background: #2A1E3C; }
+        .wheel-slot i { font-size: clamp(1.4rem, 4vw, 1.8rem); margin-bottom: 5px; }
+        .wheel-slot .orientation { font-size: clamp(0.5rem, 1.2vw, 0.6rem); margin-top: 3px; }
+
+        /* 响应式断点 */
+        @media (max-width: 480px) {
+            .nav-links { width: 90%; }
+            .hero { padding: 15px 10px 25px; }
+            .spread-grid { grid-template-columns: 1fr; }
+            .manual-grid { max-height: 300px; }
+            .selected-card {
+                width: clamp(100px, 25vw, 140px);
+                height: clamp(150px, 37vw, 210px);
+            }
+        }
+        @media (max-width: 600px) {
+            .hamburger { display: block; }
+            .draw-card { width: 110px; height: 160px; }
+            .manual-grid { grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); }
+            .manual-card .card-back { font-size: 0.6rem; }
+            .wheel-card-h { width: 90px; height: 130px; }
+            .wheel-slot { width: 90px; height: 130px; }
+            .selected-card { width: 80px; height: 115px; }
+            .hero h1 { font-size: 2.2rem; }
+        }
+        @media (min-width: 601px) and (max-width: 768px) {
+            .hamburger { display: block; }
+            .nav-links { width: 70%; max-width: 250px; }
+            .draw-card { width: 120px; height: 170px; }
+            .wheel-card-h { width: 95px; height: 140px; }
+            .spread-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .hamburger { display: none; }
+            .nav-links { 
+                position: static; width: auto; height: auto; 
+                background: transparent; padding: 0; border: none;
+                flex-direction: row; transform: none;
+            }
+            .draw-card { width: 130px; height: 185px; }
+            .wheel-card-h { width: 100px; height: 145px; }
+            .spread-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (min-width: 1025px) {
+            .hamburger { display: none; }
+            .nav-links { 
+                position: static; width: auto; height: auto; 
+                background: transparent; padding: 0; border: none;
+                flex-direction: row; transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 导航栏 -->
+        <nav class="navbar">
+            <div class="logo" data-page="home"><i class="fas fa-crown"></i> 桉的塔罗</div>
+            <div class="hamburger" id="hamburgerBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="nav-links" id="mobileNavLinks">
+                <a data-page="home" class="active">首页</a>
+                <a data-page="spreads">牌阵大全</a>
+                <a data-page="knowledge">塔罗知识</a>
+                <a data-page="about">关于我们</a>
+                <a data-page="contact">联系我们</a>
+            </div>
+        </nav>
+
+        <!-- 首页 -->
+        <div id="home-page" class="page active-page">
+            <section class="hero">
+                <div class="card-3d">
+                    <div class="card-front"><i class="fas fa-star-and-crescent"></i></div>
+                    <div class="card-back"><span>奥秘</span></div>
+                </div>
+                <h1>踏入桉的塔罗</h1>
+                <p>78张塔罗 · 随机顺序 · 正逆位</p>
+                <a class="btn-gold" id="startDivinationBtn"><i class="fas fa-hand-sparkles"></i> 开始占卜</a>
+            </section>
+
+            <h2 class="section-title">⚭ 灵境牌阵 ⚭</h2>
+            <div class="subtitle">点击牌阵，选择你喜欢的抽牌方式</div>
+            <div class="spread-grid" id="spreadGrid"></div>
+        </div>
+
+        <!-- 牌阵大全页面 -->
+        <div id="spreads-page" class="page">
+            <h2 class="section-title">📜 牌阵大全 · 含义详解</h2>
+            <div class="subtitle">点击牌阵可体验占卜，此处为含义参考</div>
+            <div class="meaning-list" id="spreadsMeaningList"></div>
+        </div>
+
+        <!-- 塔罗知识页面 -->
+        <div id="knowledge-page" class="page">
+            <h2 class="section-title">📚 塔罗知识 · 智慧之源</h2>
+            <div class="knowledge-grid">
+                <div class="knowledge-card"><h3>塔罗历史</h3><p>塔罗牌的起源与发展历程，从游戏到占卜工具的演变</p></div>
+                <div class="knowledge-card"><h3>塔罗牌构成</h3><p>78张：22张大阿卡那+56张小阿卡那（权杖、圣杯、宝剑、星币）</p></div>
+                <div class="knowledge-card"><h3>四大元素</h3><p>火（权杖）、水（圣杯）、风（宝剑）、土（星币）的深层含义</p></div>
+                <div class="knowledge-card"><h3>大阿卡纳对应</h3><p>22张大阿卡纳牌的正逆位详细含义解读</p></div>
+                <div class="knowledge-card"><h3>牌阵原理</h3><p>牌阵的作用、选择方法和位置含义解析</p></div>
+                <div class="knowledge-card"><h3>塔罗流派</h3><p>马赛塔罗、韦特塔罗、透特塔罗等主要流派介绍</p></div>
+                <div class="knowledge-card"><h3>占卜方法</h3><p>塔罗占卜的步骤、准备工作和注意事项</p></div>
+                <div class="knowledge-card"><h3>解读技巧</h3><p>塔罗牌解读的方法、技巧和原则</p></div>
+                <div class="knowledge-card"><h3>推荐阅读</h3><p>《其实你已经很塔罗了》等塔罗学习经典书籍推荐</p></div>
+            </div>
+        </div>
+
+        <!-- 关于我们页面 -->
+        <div id="about-page" class="page">
+            <div class="about-box">
+                <i class="fas fa-crown"></i>
+                <h2>桉的塔罗</h2>
+                <p>愿您所得皆所愿，所行皆坦途</p>
+                <i class="fas fa-star-and-crescent"></i>
+            </div>
+        </div>
+
+        <!-- 联系我们页面 -->
+        <div id="contact-page" class="page">
+            <div class="contact-box">
+                <i class="fas fa-envelope-open-heart"></i>
+                <h2>联系我们</h2>
+                <p>如需专业塔罗解读，欢迎添加联系方式</p>
+            </div>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fab fa-weixin"></i>
+                    <div class="contact-text">
+                        <h3>微信</h3>
+                        <p>woaicclz</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-comment-dots"></i>
+                    <div class="contact-text">
+                        <h3>服务说明</h3>
+                        <p>提供一对一塔罗牌解读服务，解答您的困惑</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <p><span class="gold"><i class="fas fa-crown"></i> 桉的塔罗 · An Tarot</span> — 神圣、宁静、值得信赖</p>
+            <p>© 2026 现代心灵的驿站</p>
+        </footer>
+    </div>
+
+    <!-- 抽牌模态框 -->
+    <div id="spreadModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3 id="modalSpreadTitle">牌阵名称</h3>
+
+            <div class="mode-tabs">
+                <button class="mode-btn active" data-mode="random">🎲 随机抽牌</button>
+                <button class="mode-btn" data-mode="manual">🖐️ 手动选牌</button>
+                <button class="mode-btn" data-mode="horizontal">🔄 水平拖拽</button>
+            </div>
+
+            <div id="modeContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- 塔罗牌库 (78张) ----------
+            const major = ["愚者","魔术师","女祭司","女皇","皇帝","教皇","恋人","战车","力量","隐士","命运之轮","正义","吊人","死神","节制","恶魔","高塔","星星","月亮","太阳","审判","世界"];
+            const suits = ["权杖","圣杯","宝剑","星币"];
+            const courts = ["侍从","骑士","皇后","国王"];
+            const numbers = ["一","二","三","四","五","六","七","八","九","十"];
+            let fullDeck = [...major];
+            suits.forEach(suit => {
+                numbers.forEach(num => fullDeck.push(`${suit}·${num}`));
+                courts.forEach(court => fullDeck.push(`${suit}·${court}`));
+            });
+
+            // 为每张牌分配图标
+            const iconMap = {};
+            const majorIcons = ["fa-face-smile","fa-hat-wizard","fa-moon","fa-crown","fa-dragon","fa-church","fa-heart","fa-car-side","fa-dumbbell","fa-user-astronaut","fa-wheel","fa-scale-balanced","fa-person-walking","fa-skull","fa-droplet","fa-angles-up","fa-building","fa-star","fa-cloud-moon","fa-sun","fa-gavel","fa-globe"];
+            major.forEach((name, idx) => { iconMap[name] = majorIcons[idx % majorIcons.length]; });
+            fullDeck.forEach(card => {
+                if (!iconMap[card]) {
+                    if (card.includes("权杖")) iconMap[card] = "fa-fire";
+                    else if (card.includes("圣杯")) iconMap[card] = "fa-water";
+                    else if (card.includes("宝剑")) iconMap[card] = "fa-wind";
+                    else if (card.includes("星币")) iconMap[card] = "fa-coins";
+                    else iconMap[card] = "fa-question";
+                }
+            });
+
+            // 随机打乱数组
+            function shuffleArray(arr) {
+                const array = [...arr];
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            // 牌阵列表与含义
+            const spreadList = ["万能核心牌","时间之箭","因果密钥","内心回响","多维认知","恋人脉动","症结之眼","感情絮语","意中人愿景","困境曙光","邂逅有缘人","吉普赛之心","二选一抉择","财富脉轮","本质深挖","双向交融","十字路口","婚姻圣殿","情侣镜像","维纳斯之镜","复杂环境判断","周运启示","六芒星窥视","前缘之镜","凯尔特十字"];
+            const spreadMeanings = {
+                "万能核心牌": "万能型牌阵，可应用于所有场合，直指事物核心。",
+                "时间之箭": "时间流牌阵，适合有时间指向的问题，揭示事件发展轨迹。",
+                "因果密钥": "理清事情原委因果，常用于单项独立事物。",
+                "内心回响": "迷惘时向内寻求答案，探索自我本源。",
+                "多维认知": "从不同角度审视固定问题，帮助全面了解事物。",
+                "恋人脉动": "预测感情发展趋势，解析二人能量流动。",
+                "症结之眼": "快速找到问题症结，极强的解决能力。",
+                "感情絮语": "为感情生活带来温柔指引，解析心理互动。",
+                "意中人愿景": "单身者专用，健全理想伴侣形象，帮助明确内心真正渴望。",
+                "困境曙光": "恋爱遇阻时寻找潜在原因，改善关系，突出重围。",
+                "邂逅有缘人": "内外双重改观，吸引合适伴侣。单身者惊喜牌阵。",
+                "吉普赛之心": "浪漫奔放，探索彼此内心，找到婚姻爱情的最佳相处方式。",
+                "二选一抉择": "在两种情况中选择其一，适用于感情、事业、学业。",
+                "财富脉轮": "揭示财富能量，指导求财方向，了解财富指数。",
+                "本质深挖": "专门处理遗留问题，深挖本质，让问题无所遁形。",
+                "双向交融": "解析情感互动关系，看清双方在同一层次的交融与差异。",
+                "十字路口": "感情遇到矛盾时，理清前因后果，促进关系融洽。",
+                "婚姻圣殿": "婚前婚后专用，探明姻缘脉动，解析婚姻深层关系。",
+                "情侣镜像": "通过树形分支对比行为差异，了解对方真实感受。",
+                "维纳斯之镜": "爱情未来指向，分析双方未来状况，预测情感走向。",
+                "复杂环境判断": "在多选择环境中分清优劣，做出正确判断。",
+                "周运启示": "解析未来一周运势，也可用于七天期限的任何事物。",
+                "六芒星窥视": "判断事情走向，分析潜意识与显意识，窥视未来能力极强。",
+                "前缘之镜": "对照彼此内心感受，揭开扑朔迷离的面纱，了却念念不忘。",
+                "凯尔特十字": "宏观视角审视事件全貌，总结规划能力极强，塔罗经典。"
+            };
+
+            // 各牌阵对应的抽牌数量
+            const spreadCardCounts = {
+                "万能核心牌": 3,
+                "时间之箭": 3,
+                "因果密钥": 3,
+                "内心回响": 3,
+                "多维认知": 4,
+                "恋人脉动": 3,
+                "症结之眼": 3,
+                "感情絮语": 3,
+                "意中人愿景": 4,
+                "困境曙光": 4,
+                "邂逅有缘人": 3,
+                "吉普赛之心": 5,
+                "二选一抉择": 5,
+                "财富脉轮": 4,
+                "本质深挖": 5,
+                "双向交融": 4,
+                "十字路口": 4,
+                "婚姻圣殿": 6,
+                "情侣镜像": 5,
+                "维纳斯之镜": 7,
+                "复杂环境判断": 5,
+                "周运启示": 7,
+                "六芒星窥视": 7,
+                "前缘之镜": 4,
+                "凯尔特十字": 10
+            };
+            // 动态生成首页牌阵
+            const spreadGrid = document.getElementById('spreadGrid');
+            if (spreadGrid) {
+                spreadList.forEach(name => {
+                    const card = document.createElement('div');
+                    card.className = 'spread-card';
+                    card.setAttribute('data-spread', name);
+                    card.innerHTML = `<div class="spread-icon"><i class="fas fa-crown"></i></div><h3>${name}</h3><p>${spreadMeanings[name] || '点击开始抽牌'}</p><div class="spread-tag">点击抽牌</div>`;
+                    spreadGrid.appendChild(card);
+                });
+            }
+
+            // 牌阵大全页面含义列表
+            const meaningListDiv = document.getElementById('spreadsMeaningList');
+            if (meaningListDiv) {
+                spreadList.forEach(name => {
+                    const item = document.createElement('div');
+                    item.className = 'meaning-item';
+                    item.innerHTML = `<h3>${name}</h3><p><strong>含义：</strong>${spreadMeanings[name] || '暂无'}</p><h4>使用方法</h4><p>一般为${spreadCardCounts[name]}张牌，每张牌位置代表不同维度。</p>`;
+                    meaningListDiv.appendChild(item);
+                });
+            }
+
+            // 页面切换
+            const pages = { 
+                home: document.getElementById('home-page'), 
+                spreads: document.getElementById('spreads-page'), 
+                knowledge: document.getElementById('knowledge-page'), 
+                about: document.getElementById('about-page'),
+                contact: document.getElementById('contact-page') 
+            };
+            const navLinks = document.querySelectorAll('.nav-links a');
+            const logo = document.querySelector('.logo');
+            function showPage(pageId) {
+                Object.values(pages).forEach(p => p?.classList.remove('active-page'));
+                if (pages[pageId]) pages[pageId].classList.add('active-page');
+                navLinks.forEach(link => { link.classList.remove('active'); if (link.dataset.page === pageId) link.classList.add('active'); });
+                document.getElementById('mobileNavLinks').classList.remove('active');
+            }
+            navLinks.forEach(link => { link.addEventListener('click', (e) => { e.preventDefault(); showPage(link.dataset.page); }); });
+            logo.addEventListener('click', () => showPage('home'));
+            document.getElementById('startDivinationBtn').addEventListener('click', () => { showPage('home'); document.getElementById('spreadGrid').scrollIntoView({ behavior: 'smooth' }); });
+
+            // 移动端汉堡菜单
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const mobileNavLinks = document.getElementById('mobileNavLinks');
+            hamburgerBtn.addEventListener('click', () => {
+                mobileNavLinks.classList.toggle('active');
+                const icon = hamburgerBtn.querySelector('i');
+                if (mobileNavLinks.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+
+            // 抽牌模态框
+            const modal = document.getElementById('spreadModal');
+            const modalTitle = document.getElementById('modalSpreadTitle');
+            const modeContainer = document.getElementById('modeContainer');
+            const closeBtn = document.querySelector('.close');
+            const modeBtns = document.querySelectorAll('.mode-btn');
+
+            let currentSpread = '';
+            let currentMode = 'random';
+            let randomCards = [];
+            let selectedManualCards = [];
+            let horizontalSelectedCards = [];
+
+            // 切换模式
+            modeBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    modeBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentMode = btn.dataset.mode;
+                    renderMode();
+                });
+            });
+
+            // 打开模态框
+            document.querySelectorAll('.spread-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    currentSpread = card.dataset.spread;
+                    modalTitle.textContent = currentSpread;
+                    modal.style.display = 'flex';
+                    currentMode = 'random';
+                    modeBtns.forEach(b => b.classList.remove('active'));
+                    document.querySelector('[data-mode="random"]').classList.add('active');
+                    renderMode();
+                });
+            });
+
+            // 关闭模态框
+            closeBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) modal.style.display = 'none';
+            });
+
+            // 随机生成正逆位
+            function randomOrientation() {
+                return Math.random() < 0.5 ? '正位' : '逆位';
+            }
+
+            // 获取随机牌
+            function getRandomCards(deck, count) {
+                const shuffled = shuffleArray(deck);
+                return shuffled.slice(0, count);
+            }
+
+            // 通用：显示最终选中的放大牌
+            function showFinalSelectedCards(cards) {
+                let html = '<div class="selected-cards" id="finalSelectedCards">';
+                cards.forEach((item, index) => {
+                    html += `
+                        <div class="selected-card">
+                            <i class="fas ${iconMap[item.card]}"></i>
+                            <div style="margin-bottom: 10px; font-weight: 600;">${item.card}</div>
+                            <div class="orientation">${item.orientation}</div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                modeContainer.insertAdjacentHTML('beforeend', html);
+                
+                // 弹出完成提示
+                setTimeout(() => {
+                    alert('✨ 选牌完成！以下是您的塔罗牌答案');
+                }, 600);
+            }
+
+            function renderMode() {
+                // 清空容器
+                modeContainer.innerHTML = '';
+                
+                if (currentMode === 'random') {
+                    randomCards = getRandomCards(fullDeck, spreadCardCounts[currentSpread]).map(card => ({ card, orientation: randomOrientation() }));
+                    let html = '<div class="cards-container" id="randomCardsContainer">';
+                    randomCards.forEach((item, idx) => {
+                        html += `<div class="draw-card" data-card="${item.card}" data-orientation="${item.orientation}" data-index="${idx}"></div>`;
+                    });
+                    html += '</div>';
+                    modeContainer.innerHTML = html;
+
+                    let revealedCount = 0; // 已揭示的牌数
+                    document.querySelectorAll('#randomCardsContainer .draw-card').forEach(card => {
+                        card.addEventListener('click', function() {
+                            if (this.classList.contains('revealed')) return;
+                            
+                            // 标记为已揭示
+                            this.classList.add('revealed');
+                            const cardName = this.dataset.card;
+                            const orientation = this.dataset.orientation;
+                            this.textContent = `${cardName}（${orientation}）`;
+                            revealedCount++;
+
+                            // 选满对应数量时锁定并显示最终答案
+                            if (revealedCount === spreadCardCounts[currentSpread]) {
+                                const randomContainer = document.getElementById('randomCardsContainer');
+                                randomContainer.classList.add('locked'); // 隐藏随机卡片容器
+                                
+                                // 显示放大的最终答案
+                                showFinalSelectedCards(randomCards);
+                            }
+                        });
+                    });
+                } else if (currentMode === 'manual') {
+                    selectedManualCards = [];
+                    // 随机打乱牌序
+                    const shuffledDeck = shuffleArray(fullDeck);
+                    let html = '<div class="manual-grid" id="manualGrid">';
+                    shuffledDeck.forEach(card => {
+                        html += `
+                            <div class="manual-card" data-card="${card}">
+                                <div class="card-front"></div>
+                                <div class="card-back"><i class="fas ${iconMap[card]}"></i>${card}<span class="orientation"></span></div>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                    html += '<div class="selected-cards" id="selectedCardsDisplay"></div>';
+                    modeContainer.innerHTML = html;
+
+                    // 点击翻转逻辑 - 每张牌仅可点击一次，不可取消
+                    document.querySelectorAll('.manual-card').forEach(card => {
+                        card.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            
+                            // 选满对应数量后禁止任何操作
+                            if (selectedManualCards.length >= spreadCardCounts[currentSpread]) {
+                                return;
+                            }
+
+                            // 已点击过的牌禁止再次点击
+                            if (this.classList.contains('flipped')) {
+                                return;
+                            }
+
+                            // 随机生成正逆位
+                            const orientation = randomOrientation();
+                            this.querySelector('.card-back .orientation').textContent = orientation;
+                            this.classList.add('flipped');
+                            // 禁用当前牌的点击（确保只能点一次）
+                            this.style.pointerEvents = 'none';
+                            selectedManualCards.push({ card: this.dataset.card, orientation });
+                            
+                            // 选满对应数量时锁定状态并放大显示最终答案
+                            if (selectedManualCards.length === spreadCardCounts[currentSpread]) {
+                                const manualGrid = document.getElementById('manualGrid');
+                                // 锁定牌阵网格（隐藏+禁用）
+                                manualGrid.classList.add('locked');
+                                // 禁用所有牌的点击
+                                document.querySelectorAll('.manual-card').forEach(c => {
+                                    c.style.pointerEvents = 'none';
+                                });
+                                // 显示放大的最终答案
+                                showFinalSelectedCards(selectedManualCards);
+                            } else {
+                                // 未选满时不显示任何内容
+                                document.getElementById('selectedCardsDisplay').innerHTML = '';
+                            }
+                        });
+                    });
+                } else if (currentMode === 'horizontal') {
+                    horizontalSelectedCards = [];
+                    const shuffledDeck = shuffleArray(fullDeck);
+                    let html = '<div class="horizontal-scroll" id="horizontalScrollContainer">';
+                    html += '<div class="scroll-track">';
+                    shuffledDeck.forEach(card => {
+                        html += `<div class="wheel-card-h" data-card="${card}"></div>`;
+                    });
+                    html += '</div></div>';
+                    html += '<div class="wheel-selected-area" id="wheelSelectedArea">';
+                    for (let i = 0; i < spreadCardCounts[currentSpread]; i++) {
+                        html += `<div class="wheel-slot" data-slot="${i}"></div>`;
+                    }
+                    html += '</div>';
+                    modeContainer.innerHTML = html;
+
+                    // 水平拖拽卡片选择
+                    const wheelCards = document.querySelectorAll('.wheel-card-h');
+                    const wheelSlots = document.querySelectorAll('.wheel-slot');
+                    wheelCards.forEach(card => {
+                        card.addEventListener('click', function() {
+                            if (horizontalSelectedCards.length >= spreadCardCounts[currentSpread]) {
+                                return;
+                            }
+                            if (this.classList.contains('selected')) return;
+                            this.classList.add('selected');
+                            const cardName = this.dataset.card;
+                            const orientation = randomOrientation();
+                            horizontalSelectedCards.push({ card: cardName, orientation });
+                            const emptySlot = document.querySelector('.wheel-slot:not(.filled)');
+                            if (emptySlot) {
+                                emptySlot.classList.add('filled');
+                                emptySlot.innerHTML = `<i class="fas ${iconMap[cardName]}"></i>${cardName}<span class="orientation">${orientation}</span>`;
+                            }
+
+                            // 选满对应数量时锁定并显示最终答案
+                            if (horizontalSelectedCards.length === spreadCardCounts[currentSpread]) {
+                                // 隐藏水平滚动区域和slot区域
+                                document.getElementById('horizontalScrollContainer').classList.add('locked');
+                                document.getElementById('wheelSelectedArea').classList.add('locked');
+                                
+                                // 禁用所有卡片点击
+                                wheelCards.forEach(c => {
+                                    c.style.pointerEvents = 'none';
+                                });
+                                
+                                // 显示放大的最终答案
+                                showFinalSelectedCards(horizontalSelectedCards);
+                            }
+                        });
+                    });
+                }
+            }
+
+        })();
+    </script>
+        <!-- 塔罗知识模态框 -->
+        <div id="knowledgeModal" class="modal">
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="knowledgeTitle"></h2>
+            <div id="knowledgeContent"></div>
+          </div>
+        </div>
+        <script>
+            // 塔罗知识模态框逻辑
+            const knowledgeModal = document.getElementById('knowledgeModal');
+            const knowledgeTitle = document.getElementById('knowledgeTitle');
+            const knowledgeContent = document.getElementById('knowledgeContent');
+            const knowledgeCards = document.querySelectorAll('.knowledge-card');
+            
+            // 塔罗知识内容
+            const knowledgeData = {
+                '塔罗牌构成': `
+                    <h3>塔罗牌的构成</h3>
+                    <p>塔罗牌共有78张，分为22张大阿卡纳牌（Major Arcana）和56张小阿卡纳牌（Minor Arcana）。</p>
+                    <h4>大阿卡纳牌（22张）</h4>
+                    <p>大阿卡纳牌又称为"大牌"，代表着宇宙间的重大能量和人生的重要阶段，从0号愚者到21号世界，描绘了一个灵魂成长的完整旅程。</p>
+                    <ul>
+                        <li>0 愚者：代表冒险、自由、天真</li>
+                        <li>1 魔术师：代表创造力、行动力、掌控力</li>
+                        <li>2 女祭司：代表直觉、智慧、神秘</li>
+                        <li>3 女皇：代表丰盛、滋养、创造力</li>
+                        <li>4 皇帝：代表权威、结构、领导力</li>
+                        <li>5 教皇：代表传统、信仰、指导</li>
+                        <li>6 恋人：代表选择、爱情、关系</li>
+                        <li>7 战车：代表意志、胜利、控制</li>
+                        <li>8 力量：代表勇气、内在力量、坚韧</li>
+                        <li>9 隐士：代表智慧、内省、独处</li>
+                        <li>10 命运之轮：代表变化、命运、循环</li>
+                        <li>11 正义：代表公平、平衡、真理</li>
+                        <li>12 倒吊人：代表牺牲、等待、视角转换</li>
+                        <li>13 死神：代表终结、转变、重生</li>
+                        <li>14 节制：代表平衡、调和、中庸</li>
+                        <li>15 恶魔：代表欲望、束缚、沉迷</li>
+                        <li>16 塔：代表剧变、觉醒、毁灭</li>
+                        <li>17 星星：代表希望、灵感、指引</li>
+                        <li>18 月亮：代表潜意识、恐惧、幻觉</li>
+                        <li>19 太阳：代表活力、成功、喜悦</li>
+                        <li>20 审判：代表觉醒、重生、召唤</li>
+                        <li>21 世界：代表完成、圆满、整合</li>
+                    </ul>
+                    <h4>小阿卡纳牌（56张）</h4>
+                    <p>小阿卡纳牌又称为"小牌"，分为四个牌组，分别对应四大元素，代表日常生活中的具体经历和挑战。</p>
+                    <ul>
+                        <li>权杖（火元素）：代表行动力、激情、创造力</li>
+                        <li>圣杯（水元素）：代表情感、人际关系、直觉</li>
+                        <li>宝剑（风元素）：代表思想、沟通、挑战</li>
+                        <li>星币（土元素）：代表物质、财富、稳定</li>
+                    </ul>
+                    <p>每个牌组包含10张数字牌（Ace到10）和4张宫廷牌（侍从、骑士、王后、国王）。</p>
+                `,
+                '四大元素': `
+                    <h3>塔罗牌的四大元素</h3>
+                    <p>塔罗牌的小阿卡纳牌对应着四大古典元素，每个元素代表着不同的能量和特质。</p>
+                    <h4>火元素（权杖牌组）</h4>
+                    <p>火元素代表着行动力、激情、创造力和生命力。权杖牌组通常与事业、冒险、热情相关，象征着主动出击和追求目标的能量。</p>
+                    <p><strong>正位含义：</strong>行动力强、充满激情、富有创造力、事业顺利</p>
+                    <p><strong>逆位含义：</strong>冲动、缺乏耐心、行动力受阻、热情消退</p>
+                    <h4>水元素（圣杯牌组）</h4>
+                    <p>水元素代表着情感、直觉、人际关系和潜意识。圣杯牌组通常与爱情、友情、情绪相关，象征着情感的流动和内心的感受。</p>
+                    <p><strong>正位含义：</strong>情感丰富、人际关系和谐、直觉敏锐、爱情美满</p>
+                    <p><strong>逆位含义：</strong>情感波动、人际关系紧张、直觉混乱、爱情不顺</p>
+                    <h4>风元素（宝剑牌组）</h4>
+                    <p>风元素代表着思想、沟通、逻辑和挑战。宝剑牌组通常与思考、决策、冲突相关，象征着理性的分析和思维的力量。</p>
+                    <p><strong>正位含义：</strong>思维清晰、沟通顺畅、决策明智、挑战克服</p>
+                    <p><strong>逆位含义：</strong>思维混乱、沟通不畅、决策失误、挑战重重</p>
+                    <h4>土元素（星币牌组）</h4>
+                    <p>土元素代表着物质、财富、稳定和实际。星币牌组通常与金钱、事业、物质生活相关，象征着实际的收获和稳定的基础。</p>
+                    <p><strong>正位含义：</strong>物质丰富、财富积累、事业稳定、生活富足</p>
+                    <p><strong>逆位含义：</strong>物质匮乏、财务困难、事业动荡、生活不稳定</p>
+                `,
+                '大阿卡纳对应': `
+                    <h3>大阿卡纳牌的详细含义</h3>
+                    <h4>0 愚者（The Fool）</h4>
+                    <p><strong>正位：</strong>冒险、自由、天真、新的开始、无拘无束、充满希望</p>
+                    <p><strong>逆位：</strong>鲁莽、冲动、缺乏规划、迷茫、不负责任</p>
+                    <h4>1 魔术师（The Magician）</h4>
+                    <p><strong>正位：</strong>创造力、行动力、掌控力、沟通能力、资源丰富</p>
+                    <p><strong>逆位：</strong>缺乏创造力、行动力不足、掌控力缺失、沟通不畅</p>
+                    <h4>2 女祭司（The High Priestess）</h4>
+                    <p><strong>正位：</strong>直觉、智慧、神秘、冷静、内在指引</p>
+                    <p><strong>逆位：</strong>直觉迟钝、缺乏智慧、过于理性、隐藏秘密</p>
+                    <h4>3 女皇（The Empress）</h4>
+                    <p><strong>正位：</strong>丰盛、滋养、创造力、母性、自然的力量</p>
+                    <p><strong>逆位：</strong>匮乏、自私、缺乏创造力、控制欲强</p>
+                    <h4>4 皇帝（The Emperor）</h4>
+                    <p><strong>正位：</strong>权威、结构、领导力、稳定、保护</p>
+                    <p><strong>逆位：</strong>独裁、控制欲强、缺乏领导力、不稳定</p>
+                    <h4>5 教皇（The Hierophant）</h4>
+                    <p><strong>正位：</strong>传统、信仰、指导、教育、精神成长</p>
+                    <p><strong>逆位：</strong>教条、僵化、缺乏创新、盲目信仰</p>
+                    <h4>6 恋人（The Lovers）</h4>
+                    <p><strong>正位：</strong>选择、爱情、关系、和谐、价值观的契合</p>
+                    <p><strong>逆位：</strong>选择困难、爱情不顺、关系紧张、价值观冲突</p>
+                    <h4>7 战车（The Chariot）</h4>
+                    <p><strong>正位：</strong>意志、胜利、控制、行动力、目标明确</p>
+                    <p><strong>逆位：</strong>失控、失败、缺乏意志、行动力不足</p>
+                    <h4>8 力量（Strength）</h4>
+                    <p><strong>正位：</strong>勇气、内在力量、坚韧、耐心、宽容</p>
+                    <p><strong>逆位：</strong>软弱、缺乏勇气、急躁、缺乏宽容</p>
+                    <h4>9 隐士（The Hermit）</h4>
+                    <p><strong>正位：</strong>智慧、内省、独处、寻求真理、自我反思</p>
+                    <p><strong>逆位：</strong>孤独、逃避、缺乏智慧、固执己见</p>
+                    <h4>10 命运之轮（The Wheel of Fortune）</h4>
+                    <p><strong>正位：</strong>变化、命运、循环、机遇、顺其自然</p>
+                    <p><strong>逆位：</strong>抗拒变化、命运不顺、循环停滞、错失机遇</p>
+                    <h4>11 正义（Justice）</h4>
+                    <p><strong>正位：</strong>公平、平衡、真理、法律、公正的裁决</p>
+                    <p><strong>逆位：</strong>不公、失衡、偏见、法律不公</p>
+                    <h4>12 倒吊人（The Hanged Man）</h4>
+                    <p><strong>正位：</strong>牺牲、等待、视角转换、自我奉献、耐心</p>
+                    <p><strong>逆位：</strong>牺牲无意义、等待无果、固执己见、不愿改变</p>
+                    <h4>13 死神（Death）</h4>
+                    <p><strong>正位：</strong>终结、转变、重生、放下、新的开始</p>
+                    <p><strong>逆位：</strong>抗拒改变、恐惧终结、无法放下、重生受阻</p>
+                    <h4>14 节制（Temperance）</h4>
+                    <p><strong>正位：</strong>平衡、调和、中庸、耐心、自我控制</p>
+                    <p><strong>逆位：</strong>失衡、极端、缺乏耐心、自我失控</p>
+                    <h4>15 恶魔（The Devil）</h4>
+                    <p><strong>正位：</strong>欲望、束缚、沉迷、物质主义、诱惑</p>
+                    <p><strong>逆位：</strong>摆脱束缚、克服欲望、觉醒、自由</p>
+                    <h4>16 塔（The Tower）</h4>
+                    <p><strong>正位：</strong>剧变、觉醒、毁灭、打破旧有结构、真相揭露</p>
+                    <p><strong>逆位：</strong>抗拒剧变、不愿觉醒、旧有结构维持、真相隐藏</p>
+                    <h4>17 星星（The Star）</h4>
+                    <p><strong>正位：</strong>希望、灵感、指引、信仰、内在平静</p>
+                    <p><strong>逆位：</strong>绝望、缺乏灵感、迷茫、信仰缺失</p>
+                    <h4>18 月亮（The Moon）</h4>
+                    <p><strong>正位：</strong>潜意识、恐惧、幻觉、直觉、梦境</p>
+                    <p><strong>逆位：</strong>直面恐惧、摆脱幻觉、直觉清晰、清醒</p>
+                    <h4>19 太阳（The Sun）</h4>
+                    <p><strong>正位：</strong>活力、成功、喜悦、自信、光明</p>
+                    <p><strong>逆位：</strong>活力不足、失败、悲伤、自卑、黑暗</p>
+                    <h4>20 审判（Judgement）</h4>
+                    <p><strong>正位：</strong>觉醒、重生、召唤、自我反省、救赎</p>
+                    <p><strong>逆位：</strong>不愿觉醒、沉迷过去、自我否定、救赎受阻</p>
+                    <h4>21 世界（The World）</h4>
+                    <p><strong>正位：</strong>完成、圆满、整合、成功、旅行</p>
+                    <p><strong>逆位：</strong>未完成、缺憾、分裂、失败、停滞</p>
+                `,
+                '牌阵原理': `
+                    <h3>塔罗牌阵的原理</h3>
+                    <p>牌阵是塔罗占卜中预设的牌的位置布局，每个位置都有其特定的含义，代表着问题的不同维度和层面。</p>
+                    <h4>牌阵的作用</h4>
+                    <p>牌阵帮助占卜者将抽象的问题分解为具体的层面，通过不同位置的牌意组合，更全面地解读问题的各个方面。</p>
+                    <h4>牌阵的选择</h4>
+                    <p>不同的牌阵适用于不同类型的问题：</p>
+                    <ul>
+                        <li>万能型牌阵：适用于所有类型的问题，直指事物核心</li>
+                        <li>时间流牌阵：适用于有时间指向的问题，揭示事件发展轨迹</li>
+                        <li>因果型牌阵：适用于理清事情原委因果的问题</li>
+                        <li>感情型牌阵：适用于爱情、人际关系相关的问题</li>
+                        <li>决策型牌阵：适用于需要做出选择的问题</li>
+                    </ul>
+                    <h4>牌阵位置的含义</h4>
+                    <p>每个牌阵的位置都有其特定的含义，例如：</p>
+                    <ul>
+                        <li>过去：代表问题的起因和背景</li>
+                        <li>现在：代表问题的当前状态</li>
+                        <li>未来：代表问题的发展趋势</li>
+                        <li>阻碍：代表问题面临的困难和挑战</li>
+                        <li>建议：代表解决问题的方法和建议</li>
+                        <li>结果：代表问题的最终结果</li>
+                    </ul>
+                `,
+                '塔罗流派': `
+                    <h3>塔罗牌的主要流派</h3>
+                    <h4>马赛塔罗（Tarot de Marseille）</h4>
+                    <p>马赛塔罗是最古老的塔罗牌之一，起源于15世纪的意大利，风格简洁，强调符号学。牌面图案简单，主要依靠符号和颜色来传达含义，适合塔罗初学者和喜欢传统风格的爱好者。</p>
+                    <h4>莱德-韦特塔罗（Rider-Waite Tarot）</h4>
+                    <p>莱德-韦特塔罗由A.E.韦特设计，于1910年出版，是目前最流行的塔罗牌之一。每张小阿卡纳牌都有丰富的画面，直观地传达牌意，非常适合初学者学习。</p>
+                    <h4>透特塔罗（Thoth Tarot）</h4>
+                    <p>透特塔罗由阿莱斯特·克劳利设计，结合了卡巴拉、占星术和炼金术的理论，符号复杂，牌意深奥，适合有一定基础的塔罗爱好者和喜欢神秘学的人。</p>
+                    <h4>维斯康提-斯福尔扎塔罗（Visconti-Sforza Tarot）</h4>
+                    <p>维斯康提-斯福尔扎塔罗是现存最古老的塔罗牌之一，制作于15世纪，牌面精美，具有很高的艺术价值，主要用于收藏和研究。</p>
+                    <h4>奥修禅塔罗（Osho Zen Tarot）</h4>
+                    <p>奥修禅塔罗结合了东方的禅学思想，牌面简洁抽象，强调内心的觉察和当下的体验，适合用于心灵成长和冥想。</p>
+                `,
+                '推荐阅读': `
+                    <h3>塔罗牌推荐阅读书籍</h3>
+                    <h4>《其实你已经很塔罗了》</h4>
+                    <p>这本书是塔罗初学者的经典入门书籍，用通俗易懂的语言解释了塔罗牌的基本概念和牌意，结合实际案例帮助读者理解塔罗占卜的方法。</p>
+                    <h4>《塔罗葵花宝典》</h4>
+                    <p>这本书详细介绍了塔罗牌的历史、牌意、牌阵和解读技巧，内容全面，适合想要深入学习塔罗的爱好者。</p>
+                    <h4>《韦特塔罗》</h4>
+                    <p>这本书是莱德-韦特塔罗的官方解读书籍，由A.E.韦特亲自撰写，详细解释了每一张牌的含义和象征意义。</p>
+                    <h4>《塔罗之书》</h4>
+                    <p>这本书深入探讨了塔罗牌的神秘学背景，结合卡巴拉、占星术和炼金术的理论，解读塔罗牌的深层含义。</p>
+                    <h4>《78度的智慧》</h4>
+                    <p>这本书从心理学的角度解读塔罗牌，将塔罗牌与荣格的心理学理论相结合，探索塔罗牌的心理层面的意义。</p>
+                `,
+                '塔罗历史': `
+                    <h3>塔罗牌的历史和起源</h3>
+                    <p>塔罗牌的起源至今尚无定论，目前较为普遍的观点是：</p>
+                    <h4>起源于意大利</h4>
+                    <p>塔罗牌起源于15世纪初意大利的一种纸牌游戏，最初称为"Tarocchi"，用于贵族之间的娱乐活动。</p>
+                    <h4>演变过程</h4>
+                    <p>18世纪末，塔罗牌开始被用于占卜，法国的神秘学家将塔罗牌与卡巴拉、占星术等神秘学理论相结合，赋予了塔罗牌更深层的含义。</p>
+                    <h4>现代塔罗的发展</h4>
+                    <p>19世纪，爱德华·韦特（A.E.Waite）加入"金色黎明"巫术社团，将塔罗牌、占星术、卡巴拉密教与炼金术结合，完善了塔罗牌的理论系统，于1910年出版了莱德-韦特塔罗牌，成为现代塔罗牌的标准。</p>
+                    <h4>塔罗牌在中国的发展</h4>
+                    <p>塔罗牌在20世纪末传入中国，随着社交媒体的发展，越来越多的人开始了解和学习塔罗牌，塔罗占卜也成为一种流行的心理咨询方式。</p>
+                `,
+                '占卜方法': `
+                    <h3>塔罗占卜的方法和注意事项</h3>
+                    <h4>占卜前的准备</h4>
+                    <ul>
+                        <li>选择安静、不受打扰的环境</li>
+                        <p>选择一个安静、隐蔽的空间，有助于集中精神，避免外界干扰。</p>
+                        <li>准备一副塔罗牌和干净的桌布</li>
+                        <p>使用干净的塔罗牌，最好用深色的桌布铺在桌面上，营造神圣的氛围。</p>
+                        <li>明确问题</li>
+                        <p>问题应具体、清晰，且关乎自身的成长与选择，避免干涉他人隐私或寻求投机取巧的答案。</p>
+                        <li>静心冥想</li>
+                        <p>花几分钟时间静心冥想，澄清自己的问题，集中注意力。</p>
+                    </ul>
+                    <h4>占卜的步骤</h4>
+                    <ul>
+                        <li>洗牌：将牌面朝下，用手洗牌，或者用切牌的方式，将牌分成几堆，然后重新组合。</li>
+                        <li>抽牌：根据选择的牌阵，抽取相应数量的牌，牌面朝下放置。</li>
+                        <li>摆牌：按照牌阵的布局，将牌面朝上摆放。</li>
+                        <li>解读：结合牌意和问题进行解读，注意正逆位的含义，联系实际情况。</li>
+                    </ul>
+                    <h4>注意事项</h4>
+                    <ul>
+                        <li>不要频繁占卜同一问题，至少间隔一个月以上。</li>
+                        <li>不要替他人抽牌，除非对方同意并在场。</li>
+                        <li>避免占卜生死、医疗、法律等专业问题，这些问题需要寻求专业人士的帮助。</li>
+                        <li>塔罗牌是工具，不是绝对的预言，解读时应结合实际情况，灵活运用。</li>
+                        <li>保持尊重和敬畏的心态，不要将塔罗牌用于娱乐或游戏。</li>
+                    </ul>
+                `,
+                '解读技巧': `
+                    <h3>塔罗牌的解读技巧</h3>
+                    <h4>基础解读方法</h4>
+                    <ul>
+                        <li>关键词解读：根据牌的关键词来解读，适合初学者。</li>
+                        <li>图像解读：根据牌面的图像和符号来解读，发挥直觉和想象力。</li>
+                        <li>故事解读：将牌面的图像编成一个故事，结合问题的情境。</li>
+                    </ul>
+                    <h4>进阶解读技巧</h4>
+                    <ul>
+                        <li>结合牌阵位置：每个牌阵的位置都有其特定的含义，将牌意与位置含义相结合。</li>
+                        <li>注意正逆位：正位代表能量顺畅，逆位代表能量受阻或过度。</li>
+                        <li>联系实际问题：不要空谈牌意，要联系提问者的实际情况和问题。</li>
+                        <li>注意牌的组合：多张牌的组合会产生新的含义，需要综合考虑。</li>
+                        <li>关注相似牌和相反牌：相似牌会强化含义，相反牌代表矛盾和冲突。</li>
+                    </ul>
+                    <h4>解读的原则</h4>
+                    <ul>
+                        <li>以提问者为中心：解读的目的是帮助提问者了解自己的问题，提供建议和指引。</li>
+                        <li>保持客观：不要将自己的主观想法强加给提问者，要根据牌意进行解读。</li>
+                        <li>积极正面：尽量从积极的角度解读牌意，帮助提问者看到希望和机会。</li>
+                        <li>尊重隐私：不要泄露提问者的个人信息和问题内容。</li>
+                    </ul>
+                `
+            };
+            
+            // 打开塔罗知识模态框
+            knowledgeCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const cardTitle = card.querySelector('h3').textContent;
+                    // 根据卡片标题获取对应的知识内容
+                    let content = knowledgeData[cardTitle];
+                    // 如果没有对应的内容，使用默认内容
+                    if (!content) {
+                        content = `<h3>${cardTitle}</h3><p>暂无详细内容，敬请期待。</p>`;
+                    }
+                    knowledgeTitle.textContent = cardTitle;
+                    knowledgeContent.innerHTML = content;
+                    knowledgeModal.style.display = 'flex';
+                });
+            });
+            
+            // 关闭模态框的通用逻辑
+            document.querySelectorAll('.close').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    btn.closest('.modal').style.display = 'none';
+                });
+            });
+            
+            // 点击模态框外部关闭
+            window.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal')) {
+                    e.target.style.display = 'none';
+                }
+            });
+        </script>
+    </body>
+</html>
